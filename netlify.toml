@@ -29,6 +29,9 @@
   VITE_APP_URL = "https://thegoat123.com"
 
 # Edge Functions
+[functions]
+  directory = "netlify/edge-functions"
+
 [[edge_functions]]
   path = "/poll/*"
   function = "og-rewriter"
