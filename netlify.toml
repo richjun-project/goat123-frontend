@@ -27,3 +27,8 @@
 # Environment variables (will be overridden by Netlify dashboard settings)
 [context.production.environment]
   VITE_APP_URL = "https://thegoat123.com"
+
+# Edge Functions
+[[edge_functions]]
+  path = "/poll/*"
+  function = "og-rewriter"
