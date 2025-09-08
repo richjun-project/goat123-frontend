@@ -17,44 +17,11 @@ exports.handler = async (event, context) => {
   
   console.log(`[poll-ssr] User-Agent: ${userAgent}, isBot: ${isBot}`);
   
-  // If not a bot, return a basic HTML that loads the React app
+  // If not a bot, pass through (let Netlify handle the routing)
+  // Return nothing to let the request continue to the next handler
   if (!isBot) {
-    const html = `<!doctype html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/assets/logo-B8tXHwOV.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <meta name="theme-color" content="#8B5CF6" />
-    <meta name="description" content="THEGOAT123 - 최고의 투표 플랫폼" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="apple-touch-icon" href="/assets/logo-B8tXHwOV.png" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="THEGOAT123 - 근본 투표 배틀" />
-    <meta property="og:description" content="MZ세대를 위한 실시간 투표 플랫폼" />
-    <meta property="og:image" content="https://thegoat123.com/og-image.png" />
-    <meta property="og:url" content="https://thegoat123.com" />
-    <title>THEGOAT123 - 근본 투표 배틀</title>
-    <script type="module" crossorigin src="/assets/index-BtBEdvvq.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/react-vendor-CavW3izX.js">
-    <link rel="modulepreload" crossorigin href="/assets/supabase-CVUUC3an.js">
-    <link rel="modulepreload" crossorigin href="/assets/antd-G47Dzyj6.js">
-    <link rel="modulepreload" crossorigin href="/assets/charts-CGfCDvP-.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-DwnYHytu.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>`;
-    
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Cache-Control': 'no-cache'
-      },
-      body: html
-    };
+    // Don't handle non-bot requests, let them pass through
+    return;
   }
 
   try {
@@ -155,8 +122,10 @@ exports.handler = async (event, context) => {
     
     <title>${pollTitle}</title>
     <script>
-      // Redirect to the actual app
-      window.location.href = '${pollUrl}';
+      // Redirect to the actual app after a short delay
+      setTimeout(() => {
+        window.location.href = '${pollUrl}';
+      }, 100);
     </script>
   </head>
   <body>
