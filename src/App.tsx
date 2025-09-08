@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
 import { AuthProvider } from './contexts/AuthContext'
 import { NotificationProvider } from './contexts/NotificationContext'
 import { ThemeProvider } from './contexts/ThemeContext'
@@ -17,11 +18,12 @@ import 'antd/dist/reset.css'
 function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <NotificationProvider>
-          <ThemeProvider>
-            <GlobalStyles />
-            <BrowserRouter>
+      <HelmetProvider>
+        <AuthProvider>
+          <NotificationProvider>
+            <ThemeProvider>
+              <GlobalStyles />
+              <BrowserRouter>
             <Routes>
             <Route path="/" element={<UltraModernLayout />}>
               <Route index element={<UltraHomePage />} />
@@ -37,10 +39,11 @@ function App() {
               <Route path="create" element={<CreatePollPage />} />
             </Route>
           </Routes>
-            </BrowserRouter>
-          </ThemeProvider>
-        </NotificationProvider>
-      </AuthProvider>
+              </BrowserRouter>
+            </ThemeProvider>
+          </NotificationProvider>
+        </AuthProvider>
+      </HelmetProvider>
     </ErrorBoundary>
   )
 }
