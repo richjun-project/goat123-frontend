@@ -1,3 +1,11 @@
+# Bot redirects for poll pages - SSR for social media crawlers
+[[redirects]]
+  from = "/poll/*"
+  to = "/.netlify/functions/poll-ssr?id=:splat"
+  status = 200
+  conditions = {User-Agent = ["*bot*", "*Bot*", "*facebook*", "*Facebook*", "*kakao*", "*KAKAO*", "*twitter*", "*Twitter*", "*whatsapp*", "*WhatsApp*", "*telegram*", "*Telegram*", "*discord*", "*Discord*", "*slack*", "*Slack*", "*linkedIn*", "*LinkedIn*"]}
+
+# SPA fallback for regular users
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -28,10 +36,6 @@
 [context.production.environment]
   VITE_APP_URL = "https://thegoat123.com"
 
-# Edge Functions
+# Functions directory
 [functions]
-  directory = "netlify/edge-functions"
-
-[[edge_functions]]
-  path = "/poll/*"
-  function = "og-rewriter"
+  directory = "netlify/functions"
