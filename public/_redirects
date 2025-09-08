@@ -1,5 +1,5 @@
-# Route all poll pages through the SSR function
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200!
+# Force all /poll/* requests through the SSR function
+/poll/* /.netlify/functions/poll-ssr?id=:splat 200!
 
 # SPA routing for everything else
 /* /index.html 200

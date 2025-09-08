@@ -1,4 +1,8 @@
-# Redirects are handled in public/_redirects
+[[redirects]]
+  from = "/poll/*"
+  to = "/.netlify/functions/poll-ssr?id=:splat"
+  status = 200
+  force = true
 
 [build]
   command = "npm run build"
