@@ -11,9 +11,39 @@ exports.handler = async (event, context) => {
     };
   }
 
-  // Log the request
+  // Check if this is a bot/crawler request
   const userAgent = event.headers['user-agent'] || '';
-  console.log(`[poll-ssr] Processing request for poll ${pollId}, User-Agent: ${userAgent}`);
+  const isBot = /bot|crawler|spider|crawling|facebook|twitter|kakao|telegram|discord|slack|linkedIn|whatsapp/i.test(userAgent);
+  
+  console.log(`[poll-ssr] User-Agent: ${userAgent}, isBot: ${isBot}`);
+  
+  // If not a bot, fetch and return the original index.html
+  if (!isBot) {
+    try {
+      // Fetch the index.html from the site
+      const response = await fetch('https://thegoat123.com/index.html');
+      const html = await response.text();
+      
+      return {
+        statusCode: 200,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'no-cache'
+        },
+        body: html
+      };
+    } catch (error) {
+      console.error('Error fetching index.html:', error);
+      // Fallback to a basic redirect
+      return {
+        statusCode: 200,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8'
+        },
+        body: `<!doctype html><html><head><script>window.location.href='/';</script></head></html>`
+      };
+    }
+  }
 
   try {
     // Fetch poll data from Supabase
