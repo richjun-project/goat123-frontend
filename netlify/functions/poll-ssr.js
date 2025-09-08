@@ -47,8 +47,8 @@ exports.handler = async (event, context) => {
 
   try {
     // Fetch poll data from Supabase
-    const supabaseUrl = 'https://aydqwwhffuxbneyxyjeh.supabase.co';
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5ZHF3d2hmZnV4Ym5leXh5amVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYwNTA5NTQsImV4cCI6MjA1MTYyNjk1NH0.Ckz1bGCaOQzwqvgQo0OIXTPCJPhHLOUKaBXgAb4kZ7A';
+    const supabaseUrl = 'https://aktukgzzplggrivtnytt.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrdHVrZ3p6cGxnZ3JpdnRueXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3MDI4NTcsImV4cCI6MjA3MTI3ODg1N30.Tjsim0Ih8iv-XdAiwDQUDHNuU77zsg6uw_XfyKKG67A';
     
     const pollResponse = await fetch(
       `${supabaseUrl}/rest/v1/polls?id=eq.${pollId}&select=*`,
@@ -61,17 +61,18 @@ exports.handler = async (event, context) => {
     );
 
     let poll = null;
-    let votePercentages = { option_a: 50, option_b: 50 };
+    let pollOptions = [];
+    let topOptions = [];
     
     if (pollResponse.ok) {
       const polls = await pollResponse.json();
       poll = polls[0];
-      console.log(`[poll-ssr] Fetched poll:`, poll ? poll.option_a + ' vs ' + poll.option_b : 'not found');
+      console.log(`[poll-ssr] Fetched poll:`, poll ? poll.title : 'not found');
       
       if (poll) {
-        // Fetch vote counts
-        const votesResponse = await fetch(
-          `${supabaseUrl}/rest/v1/votes?poll_id=eq.${pollId}&select=option`,
+        // Fetch poll options
+        const optionsResponse = await fetch(
+          `${supabaseUrl}/rest/v1/poll_options?poll_id=eq.${pollId}&order=vote_count.desc`,
           {
             headers: {
               'apikey': supabaseAnonKey,
@@ -80,16 +81,14 @@ exports.handler = async (event, context) => {
           }
         );
         
-        if (votesResponse.ok) {
-          const votes = await votesResponse.json();
-          const totalVotes = votes.length;
+        if (optionsResponse.ok) {
+          pollOptions = await optionsResponse.json();
           
-          if (totalVotes > 0) {
-            const optionAVotes = votes.filter(v => v.option === 'option_a').length;
-            const optionBVotes = votes.filter(v => v.option === 'option_b').length;
-            
-            votePercentages.option_a = Math.round((optionAVotes / totalVotes) * 100);
-            votePercentages.option_b = Math.round((optionBVotes / totalVotes) * 100);
+          // Get top 2 options for the title
+          if (pollOptions.length >= 2) {
+            topOptions = pollOptions.slice(0, 2);
+          } else if (pollOptions.length === 1) {
+            topOptions = [pollOptions[0], { option_text: '??', vote_count: 0 }];
           }
         }
       }
@@ -98,12 +97,12 @@ exports.handler = async (event, context) => {
     }
 
     // Prepare meta data
-    const pollTitle = poll 
-      ? `🔥 ${poll.option_a} vs ${poll.option_b} - THEGOAT123`
+    const pollTitle = poll && topOptions.length >= 2
+      ? `🔥 ${poll.title || `${topOptions[0].option_text} vs ${topOptions[1].option_text}`} - THEGOAT123`
       : 'THEGOAT123 - 근본 투표 배틀';
     
-    const pollDescription = poll
-      ? `${poll.option_a} ${votePercentages.option_a}% vs ${poll.option_b} ${votePercentages.option_b}% | ${poll.category || '핫'} 투표 배틀`
+    const pollDescription = poll && topOptions.length >= 2
+      ? `${topOptions[0].option_text} ${topOptions[0].vote_count}표 vs ${topOptions[1].option_text} ${topOptions[1].vote_count}표 | ${poll.category || '핫'} 투표 배틀`
       : 'MZ세대를 위한 실시간 투표 플랫폼';
     
     const pollUrl = `https://thegoat123.com/poll/${pollId}`;
