@@ -11,6 +11,40 @@ exports.handler = async (event, context) => {
     };
   }
 
+  // Check if this is a bot/crawler request
+  const userAgent = event.headers['user-agent'] || '';
+  const isBot = /bot|crawler|spider|crawling|facebook|twitter|kakao|telegram|discord|slack|linkedIn|whatsapp/i.test(userAgent);
+  
+  console.log(`[poll-ssr] User-Agent: ${userAgent}, isBot: ${isBot}`);
+  
+  // If not a bot, serve the regular SPA
+  if (!isBot) {
+    // Read and return the index.html file
+    const fs = require('fs');
+    const path = require('path');
+    
+    try {
+      const indexPath = path.join(__dirname, '../../dist/index.html');
+      const html = fs.readFileSync(indexPath, 'utf8');
+      
+      return {
+        statusCode: 200,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8'
+        },
+        body: html
+      };
+    } catch (error) {
+      // If can't read file, redirect to the poll URL
+      return {
+        statusCode: 302,
+        headers: {
+          Location: `/poll/${pollId}`
+        }
+      };
+    }
+  }
+
   try {
     // Fetch poll data from Supabase
     const supabaseUrl = 'https://aydqwwhffuxbneyxyjeh.supabase.co';
@@ -32,6 +66,7 @@ exports.handler = async (event, context) => {
     if (pollResponse.ok) {
       const polls = await pollResponse.json();
       poll = polls[0];
+      console.log(`[poll-ssr] Fetched poll:`, poll ? poll.option_a + ' vs ' + poll.option_b : 'not found');
       
       if (poll) {
         // Fetch vote counts
@@ -58,6 +93,8 @@ exports.handler = async (event, context) => {
           }
         }
       }
+    } else {
+      console.log(`[poll-ssr] Failed to fetch poll: ${pollResponse.status} ${pollResponse.statusText}`);
     }
 
     // Prepare meta data

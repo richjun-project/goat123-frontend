@@ -1,15 +1,4 @@
-# Bot redirects for poll pages - SSR for social media crawlers
-[[redirects]]
-  from = "/poll/*"
-  to = "/.netlify/functions/poll-ssr?id=:splat"
-  status = 200
-  conditions = {User-Agent = ["*bot*", "*Bot*", "*facebook*", "*Facebook*", "*kakao*", "*KAKAO*", "*twitter*", "*Twitter*", "*whatsapp*", "*WhatsApp*", "*telegram*", "*Telegram*", "*discord*", "*Discord*", "*slack*", "*Slack*", "*linkedIn*", "*LinkedIn*"]}
-
-# SPA fallback for regular users
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Redirects are now handled in public/_redirects file
 
 [build]
   command = "npm run build"
