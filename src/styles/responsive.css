@@ -1,0 +1,182 @@
+/* 모바일 반응형 스타일 */
+
+/* 모바일 기기 (최대 768px) */
+@media (max-width: 768px) {
+  /* 헤더 조정 */
+  .ant-layout-header {
+    padding: 0 16px !important;
+    height: auto !important;
+    min-height: 64px;
+  }
+  
+  .ant-layout-header > div {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 0;
+  }
+  
+  /* 모바일에서 텍스트 숨기기 */
+  .mobile-hide-text .ant-btn-icon + span {
+    display: none;
+  }
+  
+  /* 카드 패딩 조정 */
+  .ant-card {
+    margin-bottom: 12px;
+  }
+  
+  .ant-card-body {
+    padding: 16px !important;
+  }
+  
+  /* 타이틀 크기 조정 */
+  h1.ant-typography {
+    font-size: 24px !important;
+  }
+  
+  h2.ant-typography {
+    font-size: 20px !important;
+  }
+  
+  h3.ant-typography {
+    font-size: 18px !important;
+  }
+  
+  /* 버튼 크기 조정 */
+  .ant-btn {
+    padding: 4px 12px;
+  }
+  
+  /* 그리드 조정 */
+  .ant-col-xs-24 {
+    padding: 0 8px !important;
+  }
+  
+  /* 모달 너비 조정 */
+  .ant-modal {
+    max-width: calc(100vw - 32px) !important;
+    margin: 16px !important;
+  }
+  
+  /* 탭 스크롤 가능 */
+  .ant-tabs-nav {
+    overflow-x: auto !important;
+  }
+  
+  /* 투표 카드 조정 */
+  .poll-card-mobile {
+    margin-bottom: 12px;
+  }
+  
+  .poll-options-mobile {
+    flex-direction: column !important;
+  }
+  
+  /* 통계 차트 크기 조정 */
+  .chart-container {
+    height: 200px !important;
+  }
+  
+  /* 댓글 섹션 조정 */
+  .comment-section {
+    padding: 12px !important;
+  }
+  
+  /* 푸터 텍스트 크기 */
+  .ant-layout-footer {
+    padding: 16px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* 태블릿 (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .ant-layout-header {
+    padding: 0 24px !important;
+  }
+  
+  .ant-card-body {
+    padding: 20px !important;
+  }
+}
+
+/* 데스크톱 (1024px 이상) */
+@media (min-width: 1024px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* 다크 모드 스타일 */
+.dark {
+  background-color: #141414;
+}
+
+.dark .ant-layout {
+  background: #141414;
+}
+
+.dark .ant-layout-header {
+  background: #1f1f1f !important;
+  border-bottom: 1px solid #303030;
+}
+
+.dark .ant-layout-content {
+  background: #141414;
+}
+
+.dark .ant-card {
+  background: #1f1f1f;
+  border-color: #303030;
+}
+
+.dark .ant-empty-description {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* 애니메이션 개선 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 스크롤바 스타일 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1f1f1f;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
