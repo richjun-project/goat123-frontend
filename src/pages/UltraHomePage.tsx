@@ -5,8 +5,8 @@ import { FireOutlined, TrophyOutlined, StarOutlined } from '@ant-design/icons'
 import UltraHeroSection from '../components/UltraHeroSection'
 import UltraModernPollCard from '../components/UltraModernPollCard'
 import CategoryFilter from '../components/CategoryFilter'
-// import RealtimeComments from '../components/RealtimeComments' // MVP: 제거
-// import NeckAndNeckPolls from '../components/NeckAndNeckPolls' // MVP: 제거
+import RealtimeComments from '../components/RealtimeComments'
+import NeckAndNeckPolls from '../components/NeckAndNeckPolls'
 import { useHotPolls, usePolls } from '../hooks/usePolls'
 import styled from 'styled-components'
 
@@ -227,7 +227,15 @@ const UltraHomePage: React.FC = () => {
         )}
       </SectionWrapper>
 
-      {/* MVP: 실시간 박빙 투표와 실시간 댓글 섹션 제거 */}
+      {/* 실시간 박빙 투표 섹션 */}
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 2rem' }}>
+        <NeckAndNeckPolls />
+      </div>
+
+      {/* 실시간 댓글 섹션 */}
+      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 2rem' }}>
+        <RealtimeComments />
+      </div>
 
       {/* 전체 투표 섹션 */}
       <SectionWrapper id="polls-section">
