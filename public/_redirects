@@ -1,5 +1,2 @@
-# Handle all poll pages through serverless function
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200
-
-# SPA routing for everything else
+# SPA routing - this handles everything including /poll/*
 /* /index.html 200

@@ -1,4 +1,16 @@
-# Redirects are now handled in public/_redirects file
+# Bot redirects for social media crawlers  
+[[redirects]]
+  from = "/poll/*"
+  to = "/.netlify/functions/poll-ssr?id=:splat"
+  status = 200
+  force = true
+  conditions = {User-Agent = ["*bot*", "*Bot*", "*crawler*", "*spider*", "*facebook*", "*twitter*", "*kakao*", "*KAKAO*", "*telegram*", "*whatsapp*", "*discord*", "*slack*", "*linkedIn*"]}
+
+# Default SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 [build]
   command = "npm run build"
