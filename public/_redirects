@@ -1,2 +1,6 @@
+# Static files
+/sitemap.xml /sitemap.xml 200
+/robots.txt /robots.txt 200
+
 # SPA routing for all pages
 /* /index.html 200
