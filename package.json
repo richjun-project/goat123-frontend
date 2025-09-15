@@ -19,6 +19,7 @@
     "antd": "^5.27.1",
     "dayjs": "^1.11.13",
     "dotenv": "^17.2.1",
+    "firebase": "^12.2.1",
     "framer-motion": "^12.23.12",
     "html2canvas": "^1.4.1",
     "qrcode": "^1.5.4",

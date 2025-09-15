@@ -14,6 +14,7 @@ import PollStatsPage from './pages/PollStatsPage'
 import { GlobalStyles } from './styles/globalStyles'
 import 'antd/dist/reset.css'
 
+
 function App() {
   return (
     <ErrorBoundary>
@@ -22,21 +23,21 @@ function App() {
           <ThemeProvider>
             <GlobalStyles />
             <BrowserRouter>
-            <Routes>
-            <Route path="/" element={<UltraModernLayout />}>
-              <Route index element={<UltraHomePage />} />
-              <Route path="poll/:id" element={<PollDetailPage />} />
-              <Route path="poll/:id/edit" element={<EditPollPage />} />
-              <Route path="poll/:id/stats" element={<PollStatsPage />} />
-              <Route path="create-poll" element={<CreatePollPage />} />
-              <Route path="my" element={<MyPage />} />
-              <Route path="mypage" element={<MyPage />} />
-              <Route path="search" element={<SearchPage />} />
-              {/* Legacy routes for compatibility */}
-              <Route path="battle/:id" element={<PollDetailPage />} />
-              <Route path="create" element={<CreatePollPage />} />
-            </Route>
-          </Routes>
+              <Routes>
+                <Route path="/" element={<UltraModernLayout />}>
+                  <Route index element={<UltraHomePage />} />
+                  <Route path="poll/:id" element={<PollDetailPage />} />
+                  <Route path="poll/:id/edit" element={<EditPollPage />} />
+                  <Route path="poll/:id/stats" element={<PollStatsPage />} />
+                  <Route path="create-poll" element={<CreatePollPage />} />
+                  <Route path="my" element={<MyPage />} />
+                  <Route path="mypage" element={<MyPage />} />
+                  <Route path="search" element={<SearchPage />} />
+                  {/* Legacy routes for compatibility */}
+                  <Route path="battle/:id" element={<PollDetailPage />} />
+                  <Route path="create" element={<CreatePollPage />} />
+                </Route>
+              </Routes>
             </BrowserRouter>
           </ThemeProvider>
         </NotificationProvider>

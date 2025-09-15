@@ -1,8 +1,10 @@
 exports.handler = async (event, context) => {
-  // Extract poll ID from query parameters
-  const pollId = event.queryStringParameters?.id;
+  // Extract poll ID from path or query parameters
+  // Path will be like /.netlify/functions/poll-ssr/5c6fe4a9-e8d1-484f-8f83-f2fdc73b8dbc
+  const pathParts = event.path.split('/');
+  const pollId = pathParts[pathParts.length - 1] || event.queryStringParameters?.id;
   
-  if (!pollId) {
+  if (!pollId || pollId === 'poll-ssr') {
     return {
       statusCode: 302,
       headers: {
@@ -13,15 +15,37 @@ exports.handler = async (event, context) => {
 
   // Check if this is a bot/crawler request
   const userAgent = event.headers['user-agent'] || '';
-  const isBot = /bot|crawler|spider|crawling|facebook|twitter|kakao|telegram|discord|slack|linkedIn|whatsapp/i.test(userAgent);
+  
+  // 카카오톡 및 기타 소셜 미디어 크롤러 감지
+  const isSocialBot = userAgent.includes('facebookexternalhit') || 
+                      userAgent.includes('Kakaotalk-scrap') || 
+                      userAgent.includes('kakaotalk-scrap') ||
+                      userAgent.includes('KHTML, like Gecko) Version/');
+                      
+  const isOtherBot = /bot|crawler|spider|crawling|twitter|telegram|discord|slack|linkedIn|whatsapp/i.test(userAgent);
+  
+  // 실제 사용자 브라우저 감지 (카카오톡 인앱 브라우저 포함)
+  const isRealBrowser = userAgent.includes('Chrome/') || 
+                        userAgent.includes('Safari/') || 
+                        userAgent.includes('Firefox/') ||
+                        userAgent.includes('KAKAOTALK');
+  
+  // 봇인지 판단: 크롤러이면서 실제 브라우저가 아닌 경우만 봇으로 처리
+  const isBot = (isSocialBot || isOtherBot) && !isRealBrowser;
   
   console.log(`[poll-ssr] User-Agent: ${userAgent}, isBot: ${isBot}`);
   
-  // If not a bot, pass through (let Netlify handle the routing)
-  // Return nothing to let the request continue to the next handler
+  // If not a bot, use 302 redirect directly
   if (!isBot) {
-    // Don't handle non-bot requests, let them pass through
-    return;
+    // Direct 302 redirect for non-bot users (including KakaoTalk in-app browser)
+    return {
+      statusCode: 302,
+      headers: {
+        'Location': `/poll/${pollId}`,
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      },
+      body: ''
+    };
   }
 
   try {
@@ -121,12 +145,6 @@ exports.handler = async (event, context) => {
     <meta name="twitter:image" content="https://thegoat123.com/og-image.png" />
     
     <title>${pollTitle}</title>
-    <script>
-      // Redirect to the actual app after a short delay
-      setTimeout(() => {
-        window.location.href = '${pollUrl}';
-      }, 100);
-    </script>
   </head>
   <body>
     <div id="root">
@@ -134,7 +152,7 @@ exports.handler = async (event, context) => {
         <div style="text-align: center;">
           <h1>${pollTitle}</h1>
           <p>${pollDescription}</p>
-          <p>페이지로 이동 중...</p>
+          <a href="${pollUrl}" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #8B5CF6; color: white; text-decoration: none; border-radius: 5px;">투표 참여하기</a>
         </div>
       </div>
     </div>
@@ -163,9 +181,19 @@ exports.handler = async (event, context) => {
   <head>
     <meta charset="UTF-8" />
     <title>THEGOAT123 - 근본 투표 배틀</title>
-    <script>window.location.href = 'https://thegoat123.com/poll/${pollId}';</script>
+    <meta property="og:title" content="THEGOAT123 - 근본 투표 배틀" />
+    <meta property="og:description" content="MZ세대를 위한 실시간 투표 플랫폼" />
+    <meta property="og:image" content="https://thegoat123.com/og-image.png" />
   </head>
-  <body>페이지로 이동 중...</body>
+  <body>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif;">
+      <div style="text-align: center;">
+        <h1>THEGOAT123</h1>
+        <p>근본 투표 배틀</p>
+        <a href="https://thegoat123.com/poll/${pollId}" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #8B5CF6; color: white; text-decoration: none; border-radius: 5px;">투표 보러가기</a>
+      </div>
+    </div>
+  </body>
 </html>`
     };
   }

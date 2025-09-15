@@ -14,7 +14,8 @@ interface PollShareCardProps {
 const PollShareCard: React.FC<PollShareCardProps> = ({ poll, onClose }) => {
   const cardRef = useRef<HTMLDivElement>(null)
   
-  const shareUrl = `${window.location.origin}/poll/${poll.id}`
+  // SSR 함수를 통해 동적 메타 태그를 생성하는 URL 사용
+  const shareUrl = `${window.location.origin}/.netlify/functions/poll-ssr/${poll.id}`
   const options = poll.options || []
   
   // 카드 이미지로 다운로드

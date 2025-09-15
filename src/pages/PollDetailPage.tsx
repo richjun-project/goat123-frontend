@@ -7,6 +7,7 @@ import { usePoll } from '../hooks/usePolls'
 import { pollService } from '../services/polls'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
+import { useAnalytics } from '../hooks/useAnalytics'
 import PollShareCard from '../components/PollShareCard'
 import CommentSection from '../components/CommentSection'
 import PollTimer from '../components/PollTimer'
@@ -34,6 +35,7 @@ const PollDetailPage: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const { user } = useAuth()
+  const { trackPageView, trackVote, trackShare } = useAnalytics()
 
   // 로컬 스토리지에서 투표 여부 확인 및 소유자 확인
   useEffect(() => {
@@ -55,6 +57,13 @@ const PollDetailPage: React.FC = () => {
     }
     checkOwnership()
   }, [poll])
+
+  // Track page view
+  useEffect(() => {
+    if (poll) {
+      trackPageView(`Poll: ${poll.title}`)
+    }
+  }, [poll])
   
 
   const handleVote = async () => {
@@ -73,6 +82,12 @@ const PollDetailPage: React.FC = () => {
       
       // 투표 실행
       await pollService.vote(poll.id, selectedOption)
+      
+      // Track vote event
+      const selectedOptionData = poll.options?.find(opt => opt.id === selectedOption)
+      if (selectedOptionData) {
+        trackVote(poll.id, poll.title, selectedOptionData.option_text)
+      }
       
       // 로컬 스토리지에 투표 기록
       const votedPolls = JSON.parse(localStorage.getItem('votedPolls') || '[]')
@@ -101,6 +116,7 @@ const PollDetailPage: React.FC = () => {
 
   const handleShare = () => {
     pollService.incrementShareCount(poll!.id)
+    trackShare(poll!.id, poll!.title, 'modal')
     setShowShareModal(true)
   }
 

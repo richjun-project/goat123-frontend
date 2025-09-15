@@ -1,17 +1,2 @@
-# Bot-specific redirects for poll pages
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*bot*
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*Bot*
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*crawler*
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*spider*
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*facebook*
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*twitter*
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*kakao*
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*KAKAO*
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*telegram*
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*whatsapp*
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*discord*
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*slack*
-/poll/*  /.netlify/functions/poll-ssr?id=:splat  200  User-Agent=*linkedIn*
-
-# SPA routing for everything else
+# SPA routing for all pages
 /* /index.html 200
